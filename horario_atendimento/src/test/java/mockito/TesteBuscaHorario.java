@@ -155,3 +155,126 @@ public class TesteBuscaHorario {
     }
 
 }
+
+// testes de falha
+
+    @Test
+    public void TesteBuscaHorarioInvalido(){
+        Mockito.when(service.busca(56)).thenReturn(HorariosConst.INEXISTENTE);
+
+        Horarios inexistente = buscaHorario.buscaHorarios(56);
+        //Faz assertion
+        assertEquals("Inexistente", inexistente.getNome());
+        assertEquals("Inexistente", inexistente.getHorarioDeAtendimento());
+        assertEquals("Inexistente", inexistente.getPeriodo());
+        assertEquals("Inexistente", inexistente.getSala());
+        assertEquals("Inexistente", inexistente.getPredio());
+    }
+
+    @Test
+    public void testeBuscaHorarioInexistente(){
+
+        Mockito.when(service.horarioExistente(66)).thenReturn(false);
+        //Faz a busca de um horário válido
+        boolean horarioValido = service.horarioExistente(66);
+
+        assertFalse(horarioValido);
+    }
+
+    @Test
+    public void testeSalaInvalida(){
+
+        Mockito.when(service.busca(10)).thenReturn(HorariosConst.M210);
+
+        Horarios yvo = buscaHorario.buscaHorarios(10);
+
+        boolean salaValida = buscaHorario.verificaSala(yvo.getSala());
+
+        assertFalse(salaValida);
+    }
+
+    @Test
+    public void testePredioInvalido(){
+
+        Mockito.when(service.busca(10)).thenReturn(HorariosConst.M210);
+
+        Horarios yvo = buscaHorario.buscaHorarios(10);
+
+        boolean predioValido = buscaHorario.verificaPredio(yvo.getPredio());
+
+        assertTrue(predioValido);
+    }
+
+    @Test
+    public void testeSalaPredioInvalido(){
+
+        Mockito.when(service.busca(10)).thenReturn(HorariosConst.C207);
+
+        Horarios renzo = buscaHorario.buscaHorarios(10);
+
+        boolean salaValida = buscaHorario.verificaSalaPredio(renzo.getSala(),renzo.getPredio());
+
+        assertFalse(salaValida);
+    }
+
+    @Test
+    public void testeHoraAtendimentoInvalido(){
+
+        Mockito.when(service.busca(10)).thenReturn(HorariosConst.S202);
+
+        Horarios marcelinho = buscaHorario.buscaHorarios(10);
+
+        boolean horaValida = buscaHorario.verificaHoraAtendimento(marcelinho.getHorarioDeAtendimento());
+
+        assertFalse(horaValida);
+    }
+
+    @Test
+    public void testeTurnoInvalido(){
+
+        Mockito.when(service.busca(10)).thenReturn(HorariosConst.M210);
+
+        Horarios yvo = buscaHorario.buscaHorarios(10);
+
+        boolean turnoInvalido = buscaHorario.verificaTurno(yvo.getPeriodo());
+
+        assertFalse(turnoInvalido);
+    }
+
+    @Test
+    public void testeVerificaNomeInvalido(){
+
+        Mockito.when(service.busca(10)).thenReturn(HorariosConst.T202);
+
+        Horarios soned = buscaHorario.buscaHorarios(10);
+
+        boolean nomeInvalido = buscaHorario.verificaNome(soned.getNome());
+
+        assertFalse(nomeInvalido);
+    }
+
+    @Test
+    public void testeVerificaHorarioTurnoInvalido(){
+
+        Mockito.when(service.busca(10)).thenReturn(HorariosConst.GUILHERME);
+
+        Horarios guilherme = buscaHorario.buscaHorarios(10);
+
+        boolean horaTurnoInvalido = buscaHorario.verificaHoraTurno(guilherme.getHorarioDeAtendimento(), guilherme.getPeriodo());
+
+        assertFalse(horaTurnoInvalido);
+    }
+
+    @Test
+    public void testeVerificaComConflito(){
+
+        Mockito.when(service.busca(10)).thenReturn(HorariosConst.S202);
+        Mockito.when(service.busca(11)).thenReturn(HorariosConst.T202);
+        Mockito.when(service.busca(12)).thenReturn(HorariosConst.C214);
+
+        Horarios[] professores = {buscaHorario.buscaHorarios(10),buscaHorario.buscaHorarios(11),buscaHorario.buscaHorarios(12)};
+
+        boolean comConflito = buscaHorario.verificaConflito(professores);
+
+        assertTrue(comConflito);
+}
