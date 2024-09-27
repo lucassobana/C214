@@ -1,0 +1,33 @@
+class ServicoNotificacao:
+    def enviar_notificacao(self, mensagem: str):
+        raise NotImplementedError("O método enviar_notificacao precisa ser implementado")
+
+class ServicoNotificacaoEmail(ServicoNotificacao):
+    def enviar_notificacao(self, mensagem: str):
+        print(f"Enviando email com a mensagem: {mensagem}")
+
+class ServicoNotificacaoSMS(ServicoNotificacao):
+    def enviar_notificacao(self, mensagem: str):
+        print(f"Enviando SMS com a mensagem: {mensagem}")
+
+class Usuario:
+    def __init__(self, nome: str, servico_notificacao: ServicoNotificacao):
+        self.nome = nome
+        self.servico_notificacao = servico_notificacao
+
+    def notificar(self, mensagem: str):
+        print(f"Notificando o usuário {self.nome}")
+        self.servico_notificacao.enviar_notificacao(mensagem)
+
+def main():
+    servico_email = ServicoNotificacaoEmail()
+    servico_sms = ServicoNotificacaoSMS()
+
+    usuario1 = Usuario("Paulo", servico_email)
+    usuario1.notificar("Sua assinatura foi renovada.")
+
+    usuario2 = Usuario("Pedro", servico_sms)
+    usuario2.notificar("Sua fatura está disponível.")
+
+if __name__ == "__main__":
+    main()
